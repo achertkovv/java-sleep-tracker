@@ -39,77 +39,77 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsBadQuality() {
+    void testSleepingSessionsBadQuality() {
         Function<List<SleepingSession>, SleepAnalysisResult> bad = new SleepingSessionsBadQuality();
         SleepAnalysisResult result = bad.apply(sleepingSessions);
         assertEquals(2, Integer.parseInt(result.getValue().toString()));
     }
 
     @Test
-    void SleepingSessionsBadQualityMessage() {
+    void testSleepingSessionsBadQualityMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> bad = new SleepingSessionsBadQuality();
         SleepAnalysisResult result = bad.apply(sleepingSessions);
         assertEquals("Количество сессий с плохим качеством сна", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsMaxDuration() {
+    void testSleepingSessionsMaxDuration() {
         Function<List<SleepingSession>, SleepAnalysisResult> max = new SleepingSessionsMaxDuration();
         SleepAnalysisResult result = max.apply(sleepingSessions);
         assertEquals(500.0, Double.parseDouble(result.getValue().toString()));
     }
 
     @Test
-    void SleepingSessionsMaxDurationMessage() {
+    void testSleepingSessionsMaxDurationMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> max = new SleepingSessionsMaxDuration();
         SleepAnalysisResult result = max.apply(sleepingSessions);
         assertEquals("Максимальная продолжительность сессии (в минутах)", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsMinDuration() {
+    void testSleepingSessionsMinDuration() {
         Function<List<SleepingSession>, SleepAnalysisResult> min = new SleepingSessionsMinDuration();
         SleepAnalysisResult result = min.apply(sleepingSessions);
         assertEquals(45, Double.parseDouble(result.getValue().toString()));
     }
 
     @Test
-    void SleepingSessionsMinDurationMessage() {
+    void testSleepingSessionsMinDurationMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> min = new SleepingSessionsMinDuration();
         SleepAnalysisResult result = min.apply(sleepingSessions);
         assertEquals("Минимальная продолжительность сессии (в минутах)", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsAverageDuration() {
+    void testSleepingSessionsAverageDuration() {
         Function<List<SleepingSession>, SleepAnalysisResult> ave = new SleepingSessionsAverageDuration();
         SleepAnalysisResult result = ave.apply(sleepingSessions);
         assertEquals(345, Double.parseDouble(result.getValue().toString()));
     }
 
     @Test
-    void SleepingSessionsAverageDurationMessage() {
+    void testSleepingSessionsAverageDurationMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> ave = new SleepingSessionsAverageDuration();
         SleepAnalysisResult result = ave.apply(sleepingSessions);
         assertEquals("Средняя продолжительность сессии (в минутах)", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounter() {
+    void testSleepingSessionsSleeplessNightCounter() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         SleepAnalysisResult result = sleep.apply(sleepingSessions);
         assertEquals(20, Integer.parseInt(result.getValue().toString()));
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterMessage() {
+    void testSleepingSessionsSleeplessNightCounterMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         SleepAnalysisResult result = sleep.apply(sleepingSessions);
         assertEquals("Количество бессонных ночей", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterEquals0BeforeMidnightAndAfter6() {
+    void testSleepingSessionsSleeplessNightCounterEquals0BeforeMidnightAndAfter6() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
@@ -120,7 +120,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterEquals0AfterMidnightAndAfter6() {
+    void testSleepingSessionsSleeplessNightCounterEquals0AfterMidnightAndAfter6() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 00:15;02.10.25 07:30;GOOD".split(";")),
@@ -131,7 +131,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterEquals0AfterMidnightAndBefore6() {
+    void testSleepingSessionsSleeplessNightCounterEquals0AfterMidnightAndBefore6() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 00:15;02.10.25 05:30;GOOD".split(";")),
@@ -142,7 +142,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterEquals1BeforeNoonAndAfterNoon() {
+    void testSleepingSessionsSleeplessNightCounterEquals1BeforeNoonAndAfterNoon() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
@@ -153,7 +153,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleeplessNightCounterEquals1AfterNoon() {
+    void testSleepingSessionsSleeplessNightCounterEquals1AfterNoon() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
@@ -164,21 +164,21 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleepType() {
+    void testSleepingSessionsSleepType() {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         SleepAnalysisResult result = type.apply(sleepingSessions);
         assertEquals("Голубь", result.getValue().toString());
     }
 
     @Test
-    void SleepingSessionsSleepTypeMessage() {
+    void testSleepingSessionsSleepTypeMessage() {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         SleepAnalysisResult result = type.apply(sleepingSessions);
         assertEquals("Классифицируем пользователя", result.getDescription());
     }
 
     @Test
-    void SleepingSessionsSleepTypeLark() {
+    void testSleepingSessionsSleepTypeLark() {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 21:15;02.10.25 05:30;GOOD".split(";")),
@@ -190,7 +190,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
-    void SleepingSessionsSleepTypeOwl() {
+    void testSleepingSessionsSleepTypeOwl() {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 09:30;GOOD".split(";")),
