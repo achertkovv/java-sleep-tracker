@@ -12,7 +12,7 @@ public class SleepingSessionsSleepType implements Function<List<SleepingSession>
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
         // Подсчитываем количество вхождений каждой строки
         Map<String, Long> countMap = sessions.stream()
-                .filter(SleepingSession::isNotSleeplessNight)
+                .filter(SleepingSession::isNightSleep)
                 .map(SleepingSession::getUserType)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -24,8 +24,6 @@ public class SleepingSessionsSleepType implements Function<List<SleepingSession>
         if (mostCommon.isPresent()) {
             value = mostCommon.get().getKey();
         }
-//        mostCommon.ifPresent(s ->
-//                System.out.println("Строка '" + s.getKey() + "' встречается " + s.getValue() + " раз(а)."));
 
         return new SleepAnalysisResult("Классифицируем пользователя", value);
     }

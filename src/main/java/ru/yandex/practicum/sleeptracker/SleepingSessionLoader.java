@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -32,9 +33,6 @@ public class SleepingSessionLoader {
         List<String> lines;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath, UTF_8))) {
             lines = reader.lines().toList();
-
-            // Печатаем список строк для проверки
-            //lines.forEach(System.out::println);
         }
         return lines;
     }
@@ -47,6 +45,7 @@ public class SleepingSessionLoader {
         return logsFromFile.stream()
                 .map(line -> line.split(";"))
                 .map(SleepingSession::new)  // Создаём объект SleepingSession для каждой строки
+                .sorted(Comparator.comparing(SleepingSession::getStartSleeping))
                 .toList();
     }
 }

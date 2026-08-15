@@ -1,6 +1,7 @@
 package ru.yandex.practicum.sleeptracker;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -27,48 +28,37 @@ public class SleepingSession {
         return sleepQuality.equals(SleepQuality.BAD);
     }
 
-    private boolean IsTimeInRange(LocalTime time) {
-        LocalTime start = startSleepingDateTime.toLocalTime();
-        LocalTime end = endSleepingDateTime.toLocalTime();
-        if (start.isBefore(end)) {
-            // Время находится в одном интервале и не пересекает 00:00 (например, start = 01:00, а end = 08:00)
-            return time.isAfter(start) && time.isBefore(end);
-        } else {
-            // Диапазон пересекает 00:00 (например, start = 23:00, а end = 05:00 - т.е. "start" isAtfer "end")
-            return time.isAfter(start) || time.isBefore(end);
-        }
+    public LocalDate getNightDate() {
+        // Определяем к какой ночи относится сессия
+        return startSleepingDateTime.getHour() >= 12
+                ? startSleepingDateTime.toLocalDate().plusDays(1)
+                : startSleepingDateTime.toLocalDate();
     }
 
     // Бессонной ночью считается ночь, когда не было ни одной сессии сна, пересекающей интервал от 0:00 до 6:00.
     // То есть, если пользователь спал с 23:00 до 3:00, ночь не будет считаться бессонной, также как если он спал
     // с 2:00 до 7:00. А вот если сон был только с 7:00 до 11:00, такую ночь мы запишем в бессонные.
-    public boolean isSleeplessNight() {
+    public boolean isNightSleep() {
         LocalTime zero = LocalTime.of(0, 0); // 00 часов ночи
         LocalTime six = LocalTime.of(6, 0); // 06 часов утра
-        LocalDateTime start = LocalDateTime.of(startSleepingDateTime.toLocalDate(), zero);
-        LocalDateTime end = LocalDateTime.of(endSleepingDateTime.toLocalDate(), six);
 
-        // Если пользователь лёг спать в один день, а проснулся на следующий, он точно спал этой ночью
+        // Если пользователь лёг спать в один день, а проснулся на следующий, он точно спал этой ночью.
         // Подумайте о случае, когда интервал логирования начинается в одном месяце, а заканчивается в другом!
-        if ((startSleepingDateTime.toLocalDate().getMonth() == endSleepingDateTime.toLocalDate().getMonth()) &&
-                (startSleepingDateTime.toLocalDate().getDayOfMonth() <
-                        endSleepingDateTime.toLocalDate().getDayOfMonth()))
-            return false;
+        // Для того чтобы этот случай правильно вычислить, будем сравнивать дни года, а не месяца.
+        if (startSleepingDateTime.toLocalDate().getDayOfYear() <
+                        endSleepingDateTime.toLocalDate().getDayOfYear())
+            return true;
 
-        if (IsTimeInRange(zero)) {
-            // Диапазон пересекает границу полночи
-            return false;
-        } else if (IsTimeInRange(six)) {
-            // Диапазон пересекает границу 6 утра
-            return false;
-        }
+        // Определим, к какой ночи относится сессия снв
+        LocalDate nightDate = startSleepingDateTime.getHour() >= 12
+                ? startSleepingDateTime.toLocalDate().plusDays(1)
+                : startSleepingDateTime.toLocalDate();
 
-        // Диапазон находится в границах с 00:00 до 06:00
-        return startSleepingDateTime.isAfter(start) && endSleepingDateTime.isBefore(end);
-    }
+        LocalDateTime nightStart = LocalDateTime.of(nightDate, zero);
+        LocalDateTime nightEnd = LocalDateTime.of(nightDate, six);
 
-    public boolean isNotSleeplessNight() {
-        return !isSleeplessNight();
+        // Проверим, пересекает ли сессия интервал от 00:00 до 06:00
+        return (startSleepingDateTime.isBefore(nightEnd) && endSleepingDateTime.isAfter(nightStart));
     }
 
     // Для каждой ночи на основе времени засыпания и пробуждения определите, относится ночь к типу «сова»,
