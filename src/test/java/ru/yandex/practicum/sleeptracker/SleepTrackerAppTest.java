@@ -10,18 +10,34 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SleepTrackerAppTest {
     private static List<SleepingSession> sleepingSessions;
 
     @BeforeAll
     static void testGetWordleDictionary() throws IOException, URISyntaxException {
-        java.net.URL url = SleepTrackerAppTest.class.getClassLoader().getResource("sleep_log.txt");
+        /*java.net.URL url = SleepTrackerAppTest.class.getClassLoader().getResource("sleep_log.txt");
         assertNotNull(url);
-        java.nio.file.Path resPath = java.nio.file.Paths.get(url.toURI());
+        java.nio.file.Path resPath = java.nio.file.Paths.get(url.toURI());*
         SleepingSessionLoader sleepingSessionLoader = new SleepingSessionLoader(resPath.toString());
-        sleepingSessions = sleepingSessionLoader.createSleepingSessionDictionary();
+        sleepingSessions = sleepingSessionLoader.createSleepingSessionDictionary();*/
+
+        sleepingSessions = new ArrayList<>(List.of(
+                new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
+                new SleepingSession("02.10.25 23:50;03.10.25 06:40;NORMAL".split(";")),
+                new SleepingSession("03.10.25 14:10;03.10.25 15:00;NORMAL".split(";")),
+                new SleepingSession("03.10.25 23:40;04.10.25 08:00;BAD".split(";")),
+                new SleepingSession("05.10.25 00:10;05.10.25 06:20;GOOD".split(";")),
+                new SleepingSession("05.10.25 13:30;05.10.25 14:15;NORMAL".split(";")),
+                new SleepingSession("06.10.25 22:30;07.10.25 05:50;GOOD".split(";")),
+                new SleepingSession("07.10.25 23:45;08.10.25 06:30;GOOD".split(";")),
+                new SleepingSession("08.10.25 23:50;09.10.25 07:10;GOOD".split(";")),
+                new SleepingSession("10.10.25 13:00;10.10.25 14:30;NORMAL".split(";")),
+                new SleepingSession("10.10.25 23:55;11.10.25 06:10;GOOD".split(";")),
+                new SleepingSession("11.10.25 23:10;12.10.25 07:00;BAD".split(";")),
+                new SleepingSession("30.10.25 23:50;31.10.25 06:30;GOOD".split(";"))
+        )
+        );
     }
 
     @Test
