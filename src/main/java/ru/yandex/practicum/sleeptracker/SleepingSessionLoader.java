@@ -32,7 +32,8 @@ public class SleepingSessionLoader {
     private List<String> loadLogsFromFileToList() throws IOException {
         List<String> lines;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath, UTF_8))) {
-            lines = reader.lines().toList();
+            // Добавьте фильтр пустых строк
+            lines = reader.lines().filter(line -> !line.isEmpty()).toList();
         }
         return lines;
     }
@@ -43,7 +44,14 @@ public class SleepingSessionLoader {
 
         // Преобразование списка строк в список объектов SleepingSession
         return logsFromFile.stream()
-                .map(line -> line.split(";"))
+                .map(line -> {
+                    // Добавьте проверку parts.length с понятным сообщением.
+                    // нет проверки, что после split(";") получилось три части
+                    String[] parts = line.split(";");
+                    if (parts.length != 3)
+                        throw new RuntimeException("Файл содержит некорректные данные: " + line);
+                    return parts;
+                })
                 .map(SleepingSession::new)  // Создаём объект SleepingSession для каждой строки
                 .sorted(Comparator.comparing(SleepingSession::getStartSleeping))
                 .toList();

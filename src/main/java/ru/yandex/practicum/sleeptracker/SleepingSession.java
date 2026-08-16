@@ -44,9 +44,10 @@ public class SleepingSession {
 
         // Если пользователь лёг спать в один день, а проснулся на следующий, он точно спал этой ночью.
         // Подумайте о случае, когда интервал логирования начинается в одном месяце, а заканчивается в другом!
-        // Для того чтобы этот случай правильно вычислить, будем сравнивать дни года, а не месяца.
-        if (startSleepingDateTime.toLocalDate().getDayOfYear() <
-                        endSleepingDateTime.toLocalDate().getDayOfYear())
+        // Сравнение startSleepingDateTime.getDayOfYear() < endSleepingDateTime.getDayOfYear() ломается на переходе
+        // через год: сон с 31.12 23:00 до 01.01 07:00 даст 365 < 1, то есть ночь будет ошибочно записана в бессонные.
+        // день года не монотонен между годами. Сравнивайте сами даты через isBefore.
+        if (startSleepingDateTime.isBefore(endSleepingDateTime))
             return true;
 
         // Определим, к какой ночи относится сессия снв

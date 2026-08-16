@@ -7,6 +7,9 @@ import java.util.function.Function;
 public class SleepingSessionsBadQuality implements Function<List<SleepingSession>, SleepAnalysisResult> {
     @Override
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
+        if (sessions == null) {
+            return null;
+        }
         long count = sessions.stream()
                 .filter(SleepingSession::isBadSession)
                 .count();

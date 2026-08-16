@@ -8,6 +8,9 @@ import java.util.function.Function;
 public class SleepingSessionsCounter implements Function<List<SleepingSession>, SleepAnalysisResult> {
     @Override
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
+        if (sessions == null) {
+            return null;
+        }
         long count = sessions.size();
         return new SleepAnalysisResult("Количество сессий сна", count);
     }

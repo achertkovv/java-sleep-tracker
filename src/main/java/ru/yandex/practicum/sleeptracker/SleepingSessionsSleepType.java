@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 public class SleepingSessionsSleepType implements Function<List<SleepingSession>, SleepAnalysisResult> {
     @Override
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
+        if (sessions == null) {
+            return null;
+        }
         // Подсчитываем количество вхождений каждой строки
         Map<String, Long> countMap = sessions.stream()
                 .filter(SleepingSession::isNightSleep)
@@ -25,6 +28,8 @@ public class SleepingSessionsSleepType implements Function<List<SleepingSession>
             value = mostCommon.get().getKey();
         }
 
-        return new SleepAnalysisResult("Классифицируем пользователя", value);
+        // Для пустого списка сессий в результат попадет null и в консоли напечатается
+        // "Классифицируем пользователя: null". Возвращайте "Голубь"
+        return new SleepAnalysisResult("Классифицируем пользователя", value == null ? "Голубь" : value);
     }
 }

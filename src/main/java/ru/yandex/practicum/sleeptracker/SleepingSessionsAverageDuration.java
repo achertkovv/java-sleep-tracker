@@ -8,13 +8,13 @@ import java.util.function.Function;
 public class SleepingSessionsAverageDuration implements Function<List<SleepingSession>, SleepAnalysisResult> {
     @Override
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
-        double count = 0;
+        if (sessions == null) {
+            return null;
+        }
         OptionalDouble averageOptional = sessions.stream()
                 .mapToDouble(SleepingSession::getSessionInterval)
                 .average();
-        if (averageOptional.isPresent()) {
-            count = Math.round(averageOptional.getAsDouble()); // Получаем значение
-        }
+        double count = averageOptional.isPresent() ? Math.round(averageOptional.getAsDouble()) : 0; // Получаем значение
         return new SleepAnalysisResult("Средняя продолжительность сессии (в минутах)", count);
     }
 }

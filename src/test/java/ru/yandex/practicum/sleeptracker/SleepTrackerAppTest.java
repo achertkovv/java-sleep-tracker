@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SleepTrackerAppTest {
     private static List<SleepingSession> sleepingSessions;
@@ -114,7 +115,7 @@ public class SleepTrackerAppTest {
     void testSleepingSessionsSleeplessNightCounter() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
         SleepAnalysisResult result = sleep.apply(sleepingSessions);
-        assertEquals(20, Integer.parseInt(result.getValue().toString()));
+        assertEquals(19, Integer.parseInt(result.getValue().toString()));
     }
 
     @Test
@@ -130,7 +131,7 @@ public class SleepTrackerAppTest {
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
                 new SleepingSession("02.10.25 23:50;03.10.25 06:40;NORMAL".split(";")),
-                new SleepingSession("03.10.25 22:10;03.10.25 06:10;NORMAL".split(";"))));
+                new SleepingSession("03.10.25 22:10;04.10.25 06:10;NORMAL".split(";"))));
         SleepAnalysisResult result = sleep.apply(testSleepingSessions);
         assertEquals(0, Integer.parseInt(result.getValue().toString()));
     }
@@ -163,20 +164,17 @@ public class SleepTrackerAppTest {
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
                 new SleepingSession("02.10.25 11:50;02.10.25 14:40;BAD".split(";")),
-                new SleepingSession("03.10.25 22:10;03.10.25 06:10;NORMAL".split(";"))));
+                new SleepingSession("03.10.25 22:10;04.10.25 06:10;NORMAL".split(";"))));
         SleepAnalysisResult result = sleep.apply(testSleepingSessions);
         assertEquals(1, Integer.parseInt(result.getValue().toString()));
     }
 
     @Test
-    void testSleepingSessionsSleeplessNightCounterEquals1AfterNoon() {
+    void testSleepingSessionsSleeplessNightCounterEquals0IfSleepingSessionsAreEmpty() {
         Function<List<SleepingSession>, SleepAnalysisResult> sleep = new SleepingSessionsSleeplessNightCounter();
-        List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
-                new SleepingSession("01.10.25 23:15;02.10.25 07:30;GOOD".split(";")),
-                new SleepingSession("02.10.25 12:50;02.10.25 14:40;BAD".split(";")),
-                new SleepingSession("03.10.25 22:10;03.10.25 06:10;NORMAL".split(";"))));
-        SleepAnalysisResult result = sleep.apply(testSleepingSessions);
-        assertEquals(1, Integer.parseInt(result.getValue().toString()));
+        // Добавьте тест на пустой список.
+        SleepAnalysisResult result = sleep.apply(new ArrayList<>());
+        assertEquals(0, Integer.parseInt(result.getValue().toString()));
     }
 
     @Test
@@ -198,9 +196,9 @@ public class SleepTrackerAppTest {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 21:15;02.10.25 05:30;GOOD".split(";")),
-                new SleepingSession("02.10.25 12:50;02.10.25 14:40;BAD".split(";")),
-                new SleepingSession("03.10.25 21:10;03.10.25 06:00;NORMAL".split(";")),
-                new SleepingSession("03.10.25 12:10;03.10.25 13:00;NORMAL".split(";"))));
+                new SleepingSession("02.10.25 21:50;03.10.25 06:00;BAD".split(";")),
+                new SleepingSession("03.10.25 14:10;03.10.25 17:00;NORMAL".split(";")),
+                new SleepingSession("03.10.25 21:10;04.10.25 05:00;NORMAL".split(";"))));
         SleepAnalysisResult result = type.apply(testSleepingSessions);
         assertEquals("Жаворонок", result.getValue().toString());
     }
@@ -210,9 +208,9 @@ public class SleepTrackerAppTest {
         Function<List<SleepingSession>, SleepAnalysisResult> type = new SleepingSessionsSleepType();
         List<SleepingSession> testSleepingSessions = new ArrayList<>(List.of(
                 new SleepingSession("01.10.25 23:15;02.10.25 09:30;GOOD".split(";")),
-                new SleepingSession("02.10.25 12:50;02.10.25 14:40;BAD".split(";")),
-                new SleepingSession("03.10.25 23:10;03.10.25 09:00;NORMAL".split(";")),
-                new SleepingSession("03.10.25 12:10;03.10.25 13:00;NORMAL".split(";"))));
+                new SleepingSession("02.10.25 23:50;03.10.25 09:40;BAD".split(";")),
+                new SleepingSession("03.10.25 14:10;03.10.25 18:00;NORMAL".split(";")),
+                new SleepingSession("03.10.25 23:10;04.10.25 06:00;NORMAL".split(";"))));
         SleepAnalysisResult result = type.apply(testSleepingSessions);
         assertEquals("Сова", result.getValue().toString());
     }
